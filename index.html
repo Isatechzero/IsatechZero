@@ -1025,22 +1025,12 @@
             openDirectWhatsApp(message);
         }
 
-        // Abrir WhatsApp directo con mensaje prellenado (compatible con vista previa iframe y móviles)
+                // Abrir WhatsApp directo con mensaje prellenado
         function openDirectWhatsApp(text) {
             const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
-            
-            // Crear enlace temporal para evitar bloqueo de popups en navegadores e iframes
-            const link = document.createElement('a');
-            link.href = url;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            // Mostrar aviso con opción de copia por si la vista previa restringe enlaces externos
-            showToast('Abriendo WhatsApp (+58 414-7351500)...');
+            window.location.href = url;
         }
+            
 
         // Menú móvil
         function toggleMobileMenu() {
