@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>isatech / zero | Hardware, PCs Gamer & Servicio Técnico - Barinas</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        bgMain: '#0f1117',
+                        bgCard: '#161b22',
+                        bgCardHover: '#1c222b',
+                        borderSubtle: '#262d38',
+                        isaCyan: '#00f0ff',
+                        isaBlue: '#0284c7',
+                        zeroPink: '#ff2a6d',
+                        zeroCoral: '#ff5e8e'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-bgMain text-slate-200 font-sans antialiased selection:bg-zeroPink selection:text-white overflow-x-hidden">
+
+    <!-- Notificación Toast Flotante -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-bgCard border border-isaCyan/40 text-white px-5 py-3 rounded-2xl shadow-2xl shadow-isaCyan/10 flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-isaCyan animate-pulse"></span>
+            <span id="toast-message" class="text-sm font-medium">Agregado a tu cotización</span>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         NAVBAR / ENCABEZADO
+    ========================================================= -->
+    <header class="sticky top-0 z-40 bg-bgMain/85 backdrop-blur-xl border-b border-borderSubtle">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo Estilizado isatech / zero con guiño minimalista de cuernitos -->
+                <a href="#" class="flex items-center gap-2.5 group focus:outline-none">
+                    <div class="relative w-10 h-10 rounded-xl bg-bgCard border border-borderSubtle flex items-center justify-center group-hover:border-zeroPink/60 transition-colors">
+                        <!-- SVG Icono minimalista de circuito + cuernitos sutiles -->
+                        <svg class="w-6 h-6" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Cuernitos minimalistas superiores en rosa neón -->
+                            <path d="M9 11L6.5 4.5L12.5 8.5" stroke="#ff2a6d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M23 11L25.5 4.5L19.5 8.5" stroke="#ff2a6d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <!-- Núcleo / Chip en cian -->
+                            <rect x="8" y="10" width="16" height="15" rx="4" stroke="#00f0ff" stroke-width="2"/>
+                            <circle cx="13" cy="17.5" r="1.5" fill="#00f0ff"/>
+                            <circle cx="19" cy="17.5" r="1.5" fill="#ff2a6d"/>
+                        </svg>
+                    </div>
+                    <div class="flex items-baseline tracking-tight text-xl sm:text-2xl font-extrabold">
+                        <span class="text-white group-hover:text-isaCyan transition-colors">isatech</span>
+                        <span class="mx-1.5 text-slate-600 font-light">/</span>
+                        <span class="relative text-zeroPink font-black tracking-wide">
+                            zero
+                            <!-- Sutil detalle geométrico sobre la 'o' -->
+                            <span class="absolute -top-1 -right-1.5 w-1.5 h-1.5 rounded-full bg-zeroPink/80"></span>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Enlaces de Navegación (Desktop) -->
+                <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                    <a href="#catalogo" class="hover:text-isaCyan transition-colors py-2">Catálogo & Hardware</a>
+                    <a href="#servicios" class="hover:text-zeroPink transition-colors py-2">Servicio Técnico</a>
+                    <a href="#garantia" class="hover:text-isaCyan transition-colors py-2">Garantía</a>
+                    <a href="#contacto" class="hover:text-white transition-colors py-2">Contacto</a>
+                </nav>
+
+                <!-- Botones de Acción Derecha -->
+                <div class="flex items-center gap-3">
+                    <!-- Botón Abrir Carrito / Cotizador -->
+                    <button onclick="toggleCart()" class="relative p-3 rounded-xl bg-bgCard hover:bg-bgCardHover border border-borderSubtle hover:border-isaCyan/50 text-slate-200 transition-all group" aria-label="Abrir lista de cotización">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 group-hover:text-isaCyan transition-colors"></i>
+                        <span id="cart-badge" class="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1.5 rounded-full bg-zeroPink text-white text-[11px] font-bold flex items-center justify-center shadow-lg shadow-zeroPink/30">
+                            0
+                        </span>
+                    </button>
+
+                    <!-- Botón Menú Móvil -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-3 rounded-xl bg-bgCard border border-borderSubtle text-slate-300 hover:text-white" aria-label="Menú">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden bg-bgCard border-b border-borderSubtle px-4 pt-2 pb-5 space-y-2">
+            <a href="#catalogo" onclick="toggleMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:bg-bgMain hover:text-isaCyan">Catálogo & Hardware</a>
+            <a href="#servicios" onclick="toggleMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:bg-bgMain hover:text-zeroPink">Servicio Técnico</a>
+            <a href="#garantia" onclick="toggleMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:bg-bgMain hover:text-isaCyan">Políticas de Garantía</a>
+            <a href="#contacto" onclick="toggleMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-slate-200 hover:bg-bgMain hover:text-white">Ubicación y Contacto</a>
+        </div>
+    </header>
+
+    <!-- =========================================================
+         HERO SECTION
+    ========================================================= -->
+    <section class="relative pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden">
+        <!-- Resplandores ambientales sutiles -->
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-isaCyan/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-zeroPink/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Columna Texto Hero -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-bgCard border border-borderSubtle text-xs font-mono text-isaCyan">
+                        <span class="w-2 h-2 rounded-full bg-zeroPink animate-ping"></span>
+                        <span>BARINAS, VENEZUELA • HARDWARE STORE & TECH</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.1]">
+                        Componentes, GPUs y PCs Gamer de 
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-isaCyan via-sky-400 to-zeroPink">
+                            alto rendimiento.
+                        </span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Venta de procesadores, tarjetas gráficas, combos AM4/AM5, almacenamiento y fuentes certificadas en Barinas. Además, contamos con soporte técnico especializado para tus equipos.
+                    </p>
+
+                    <!-- Botones de Acción Rápida -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#catalogo" class="w-full sm:w-auto px-7 py-4 rounded-2xl bg-isaCyan hover:bg-sky-300 text-bgMain font-bold text-sm sm:text-base transition-all shadow-lg shadow-isaCyan/20 flex items-center justify-center gap-2">
+                            <i data-lucide="cpu" class="w-5 h-5"></i>
+                            <span>Explorar Componentes</span>
+                        </a>
+                        <button onclick="openDirectWhatsApp('Hola isatech / zero, quiero cotizar componentes o una PC armada.')" class="w-full sm:w-auto px-7 py-4 rounded-2xl bg-bgCard hover:bg-bgCardHover border border-zeroPink/50 hover:border-zeroPink text-white font-semibold text-sm sm:text-base transition-all shadow-lg shadow-zeroPink/10 flex items-center justify-center gap-2">
+                            <i data-lucide="message-circle" class="w-5 h-5 text-zeroPink"></i>
+                            <span>Cotizar por WhatsApp</span>
+                        </button>
+                    </div>
+
+                    <!-- Indicadores Rápidos -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-borderSubtle/80 max-w-lg mx-auto lg:mx-0">
+                        <div>
+                            <p class="text-xl sm:text-2xl font-extrabold text-white font-mono">100%</p>
+                            <p class="text-xs text-slate-400">Hardware verificado</p>
+                        </div>
+                        <div>
+                            <p class="text-xl sm:text-2xl font-extrabold text-isaCyan font-mono">AM4/AM5</p>
+                            <p class="text-xs text-slate-400">Combos y builds</p>
+                        </div>
+                        <div>
+                            <p class="text-xl sm:text-2xl font-extrabold text-zeroPink font-mono">Barinas</p>
+                            <p class="text-xs text-slate-400">Entrega inmediata</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Visual / Tarjeta Técnica Destacada -->
+                <div class="lg:col-span-5">
+                    <div class="relative rounded-3xl bg-bgCard border border-borderSubtle p-6 sm:p-8 shadow-2xl">
+                        <div class="flex items-center justify-between pb-4 mb-5 border-b border-borderSubtle">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-zeroPink"></span>
+                                <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-isaCyan"></span>
+                            </div>
+                            <span class="text-xs font-mono text-slate-400">HARDWARE & STOCK DESTACADO</span>
+                        </div>
+
+                        <!-- Visualización de Hardware Destacado -->
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-2xl bg-bgMain border border-borderSubtle flex items-center justify-between">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-xl bg-isaCyan/10 border border-isaCyan/30 flex items-center justify-center text-isaCyan">
+                                        <i data-lucide="cpu" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-white">Procesadores & Combos Ryzen</h3>
+                                        <p class="text-xs text-slate-400">Ryzen 5 5600G / 5600X + B450M / B550M</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-mono px-2.5 py-1 rounded-lg bg-isaCyan/10 text-isaCyan font-semibold">STOCK</span>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-bgMain border border-borderSubtle flex items-center justify-between">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-xl bg-zeroPink/10 border border-zeroPink/30 flex items-center justify-center text-zeroPink">
+                                        <i data-lucide="fan" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-white">Tarjetas Gráficas & Fuentes</h3>
+                                        <p class="text-xs text-slate-400">GPUs certificadas y PSUs 80+ Gold / Bronze</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-mono px-2.5 py-1 rounded-lg bg-zeroPink/10 text-zeroPink font-semibold">1080P/2K</span>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-bgMain border border-borderSubtle flex items-center justify-between">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                                        <i data-lucide="hard-drive" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-white">RAM RGB, SSD NVMe & Cases</h3>
+                                        <p class="text-xs text-slate-400">3200MHz Dual Channel y gabinetes gamer</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-mono px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 font-semibold">NUEVO</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-borderSubtle flex items-center justify-between text-xs text-slate-400">
+                            <span>¿Buscas armar o actualizar tu PC?</span>
+                            <a href="#catalogo" class="text-isaCyan hover:underline font-semibold flex items-center gap-1">
+                                Ver catálogo <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SECCIÓN PRINCIPAL: CATÁLOGO DE HARDWARE Y COMPONENTES
+    ========================================================= -->
+    <section id="catalogo" class="py-20 bg-bgCard/40 border-y border-borderSubtle">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Encabezado y Controles de Filtro -->
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-widest text-isaCyan font-bold">Tienda de Hardware</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mt-2">Componentes, Combos & Equipos</h2>
+                    <p class="text-slate-400 mt-2 text-sm sm:text-base">
+                        Selecciona piezas o equipos completos para cotizar al instante, o revisa las actualizaciones diarias en nuestro <a href="https://whatsapp.com/channel/0029VbDb4l86GcGFzIH14V0Y" target="_blank" rel="noopener noreferrer" class="text-isaCyan hover:underline font-semibold">Canal oficial de WhatsApp</a>.
+                    </p>
+                </div>
+
+                <!-- Buscador Rápido -->
+                <div class="relative w-full lg:w-80">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        oninput="filterProducts()" 
+                        placeholder="Buscar Ryzen, B550M, EVGA, RX 580..." 
+                        class="w-full pl-11 pr-4 py-3 rounded-2xl bg-bgCard border border-borderSubtle focus:border-isaCyan focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
+                    >
+                </div>
+            </div>
+
+            <!-- Pestañas de Categoría -->
+            <div class="flex items-center gap-2.5 overflow-x-auto pb-4 mb-8 no-scrollbar" id="category-filters">
+                <button onclick="setCategory('todos')" data-cat="todos" class="cat-btn active px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all bg-isaCyan text-bgMain shadow-md shadow-isaCyan/20">
+                    Todo el Catálogo
+                </button>
+                <button onclick="setCategory('pcs')" data-cat="pcs" class="cat-btn px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all bg-bgCard text-slate-300 hover:text-white border border-borderSubtle">
+                    PCs & Combos
+                </button>
+                <button onclick="setCategory('gpu')" data-cat="gpu" class="cat-btn px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all bg-bgCard text-slate-300 hover:text-white border border-borderSubtle">
+                    Tarjetas Gráficas
+                </button>
+                <button onclick="setCategory('componentes')" data-cat="componentes" class="cat-btn px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all bg-bgCard text-slate-300 hover:text-white border border-borderSubtle">
+                    RAM, SSD & Fuentes
+                </button>
+                <button onclick="setCategory('servicios')" data-cat="servicios" class="cat-btn px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all bg-bgCard text-slate-300 hover:text-white border border-borderSubtle">
+                    Servicio Técnico
+                </button>
+            </div>
+
+            <!-- Grid de Productos -->
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Renderizado dinámicamente por JS -->
+            </div>
+
+            <!-- Estado Vacío de Búsqueda -->
+            <div id="empty-state" class="hidden text-center py-16 px-4 rounded-3xl bg-bgCard border border-borderSubtle">
+                <i data-lucide="search-x" class="w-12 h-12 text-slate-500 mx-auto mb-3"></i>
+                <h3 class="text-lg font-bold text-white">No encontramos coincidencias</h3>
+                <p class="text-sm text-slate-400 mt-1 mb-5">Intenta con otro término o consúltanos directamente por WhatsApp si buscas un componente específico bajo pedido.</p>
+                <button onclick="resetFilters()" class="px-5 py-2.5 rounded-xl bg-isaCyan text-bgMain text-sm font-bold">
+                    Ver todo el catálogo
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SECCIÓN SECUNDARIA: SERVICIO TÉCNICO Y SOPORTE
+    ========================================================= -->
+    <section id="servicios" class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-widest text-zeroPink font-bold">Respaldo & Soporte</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white mt-1.5">Servicio Técnico Especializado</h2>
+                    <p class="text-slate-400 mt-2 text-sm max-w-2xl">
+                        Complementamos nuestra tienda de hardware con laboratorio técnico para ensamblaje, mantenimiento preventivo y reparación de equipos.
+                    </p>
+                </div>
+                <button onclick="openDirectWhatsApp('Hola isatech / zero, necesito soporte técnico para un equipo.')" class="self-start md:self-auto px-5 py-2.5 rounded-xl bg-bgCard hover:bg-bgCardHover border border-zeroPink/40 text-xs sm:text-sm font-semibold text-white transition-colors flex items-center gap-2">
+                    <i data-lucide="wrench" class="w-4 h-4 text-zeroPink"></i>
+                    <span>Agendar revisión técnica</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Soporte 1 -->
+                <div class="rounded-2xl bg-bgCard border border-borderSubtle p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-isaCyan/10 border border-isaCyan/25 flex items-center justify-center text-isaCyan">
+                                <i data-lucide="cpu" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-white">Ensamblaje & Upgrades PC</h3>
+                        </div>
+                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4">
+                            Armado profesional con los componentes que adquieras en tienda, gestión limpia de cables, actualización de BIOS y optimización de Windows.
+                        </p>
+                    </div>
+                    <button onclick="openDirectWhatsApp('Hola isatech / zero, quiero cotizar el ensamblaje o actualización de mi PC.')" class="text-xs font-bold text-isaCyan hover:underline inline-flex items-center gap-1">
+                        <span>Cotizar armado</span>
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+                <!-- Soporte 2 -->
+                <div class="rounded-2xl bg-bgCard border border-borderSubtle p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-zeroPink/10 border border-zeroPink/25 flex items-center justify-center text-zeroPink">
+                                <i data-lucide="thermometer-snowflake" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-white">Mantenimiento Térmico & GPUs</h3>
+                        </div>
+                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4">
+                            Limpieza interna profunda, reemplazo de pasta térmica de alto rendimiento, thermal pads y pruebas de estabilidad en FurMark.
+                        </p>
+                    </div>
+                    <button onclick="openDirectWhatsApp('Hola isatech / zero, me interesa mantenimiento térmico para mi PC o tarjeta gráfica.')" class="text-xs font-bold text-zeroPink hover:underline inline-flex items-center gap-1">
+                        <span>Consultar mantenimiento</span>
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+                <!-- Soporte 3 -->
+                <div class="rounded-2xl bg-bgCard border border-borderSubtle p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-400">
+                                <i data-lucide="smartphone" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-white">Smartphones & Laptops</h3>
+                        </div>
+                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4">
+                            Cambio de pantallas/módulos, pines de carga, baterías y diagnóstico de fallas para teléfonos y equipos portátiles.
+                        </p>
+                    </div>
+                    <button onclick="openDirectWhatsApp('Hola isatech / zero, quiero consultar reparación de un Smartphone o Laptop.')" class="text-xs font-bold text-sky-400 hover:underline inline-flex items-center gap-1">
+                        <span>Cotizar reparación</span>
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SECCIÓN DE GARANTÍA Y CONFIANZA
+    ========================================================= -->
+    <section id="garantia" class="py-20 bg-bgCard/40 border-y border-borderSubtle">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="text-xs font-mono uppercase tracking-widest text-zeroPink font-bold">Transparencia y Respaldo</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-2">Políticas de Garantía</h2>
+                <p class="text-slate-400 mt-3 text-sm sm:text-base">
+                    En <span class="text-white font-semibold">isatech / zero</span> trabajamos con reglas claras desde el primer día para proteger tanto tu inversión como la calidad de nuestro trabajo técnico.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Lo que SÍ cubre la garantía -->
+                <div class="rounded-3xl bg-bgCard border border-isaCyan/30 p-7 sm:p-8">
+                    <div class="flex items-center gap-3.5 mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-isaCyan/10 border border-isaCyan/30 flex items-center justify-center text-isaCyan">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Cobertura de Garantía</h3>
+                            <p class="text-xs text-isaCyan font-mono">RESPALDO DIRECTO EN TIENDA</p>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-4 text-sm text-slate-300">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check" class="w-5 h-5 text-isaCyan shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">Defectos de fábrica:</strong> Cubrimos fallas técnicas comprobables de origen en componentes nuevos, combos ensamblados y tarjetas gráficas certificadas.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check" class="w-5 h-5 text-isaCyan shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">Mano de obra y ensamblaje:</strong> Garantizamos la correcta instalación de componentes, temperaturas óptimas y funcionamiento estable tras nuestras pruebas de estrés.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check" class="w-5 h-5 text-isaCyan shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">Repuestos y pantallas:</strong> Cobertura por fallas táctiles o de imagen de fábrica siempre que se conserven intactos los sellos de seguridad y micas protectoras.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Exclusiones Importantes -->
+                <div class="rounded-3xl bg-bgCard border border-zeroPink/30 p-7 sm:p-8">
+                    <div class="flex items-center gap-3.5 mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-zeroPink/10 border border-zeroPink/30 flex items-center justify-center text-zeroPink">
+                            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Exclusiones de Garantía</h3>
+                            <p class="text-xs text-zeroPink font-mono">CONDICIONES DE USO Y CUIDADO</p>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-4 text-sm text-slate-300">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="x" class="w-5 h-5 text-zeroPink shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">Fluctuaciones eléctricas y bajones de luz:</strong> No cubre componentes quemados o dañados por picos de voltaje o uso sin regulador / UPS adecuado.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="x" class="w-5 h-5 text-zeroPink shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">Daños físicos o humedad:</strong> Golpes, caídas, pantallas partidas/astilladas tras la entrega, pines doblados por mala manipulación o contacto con líquidos.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="x" class="w-5 h-5 text-zeroPink shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">Manipulación externa o cambio de opinión:</strong> Ruptura de sellos de garantía, overclocking indebido o devoluciones por cambio de opinión/incompatibilidad no consultada.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         FOOTER / PIE DE PÁGINA
+    ========================================================= -->
+    <footer id="contacto" class="bg-bgMain pt-16 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-borderSubtle">
+                
+                <!-- Marca -->
+                <div class="space-y-4">
+                    <div class="flex items-baseline tracking-tight text-2xl font-extrabold">
+                        <span class="text-white">isatech</span>
+                        <span class="mx-1.5 text-slate-600 font-light">/</span>
+                        <span class="text-zeroPink font-black">zero</span>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Tu aliado tecnológico en Barinas. Venta de hardware seleccionado, armado de PCs gamer y servicio técnico especializado con honestidad y precisión.
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <button onclick="openDirectWhatsApp('Hola isatech / zero, vengo desde su página web.')" class="p-2.5 rounded-xl bg-bgCard hover:bg-emerald-500/20 border border-borderSubtle hover:border-emerald-500/50 text-slate-300 hover:text-emerald-400 transition-colors" aria-label="WhatsApp Directo">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                        </button>
+                        <a href="https://whatsapp.com/channel/0029VbDb4l86GcGFzIH14V0Y" target="_blank" rel="noopener noreferrer" class="px-3 py-2 rounded-xl bg-bgCard hover:bg-isaCyan/20 border border-borderSubtle hover:border-isaCyan/50 text-xs font-semibold text-isaCyan transition-colors flex items-center gap-1.5" aria-label="Canal de WhatsApp">
+                            <i data-lucide="megaphone" class="w-4 h-4"></i>
+                            <span>Canal WhatsApp</span>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-xl bg-bgCard hover:bg-zeroPink/20 border border-borderSubtle hover:border-zeroPink/50 text-slate-300 hover:text-zeroPink transition-colors" aria-label="Instagram">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-white">Ubicación</h4>
+                    <div class="flex items-start gap-3 text-sm text-slate-400">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-zeroPink shrink-0 mt-0.5"></i>
+                        <span>Barinas, Estado Barinas, Venezuela.<br>Entregas personales acordadas y recepción en taller técnico.</span>
+                    </div>
+                </div>
+
+                <!-- Horario -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-white">Horario de Atención</h4>
+                    <div class="flex items-start gap-3 text-sm text-slate-400">
+                        <i data-lucide="clock" class="w-5 h-5 text-isaCyan shrink-0 mt-0.5"></i>
+                        <div>
+                            <p><strong class="text-slate-200">Lunes a Viernes:</strong> 8:30 AM – 5:30 PM</p>
+                            <p class="mt-1"><strong class="text-slate-200">Sábados:</strong> 9:00 AM – 2:00 PM</p>
+                            <p class="mt-1 text-xs text-slate-500">Atención vía WhatsApp previa cita</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contacto Directo -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-white">Contacto Rápido</h4>
+                    <p class="text-sm text-slate-400">¿Tienes dudas sobre compatibilidad o presupuesto de reparación?</p>
+                    <p class="text-sm font-mono font-bold text-isaCyan">+58 414-7351500</p>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="openDirectWhatsApp('Hola isatech / zero, necesito información sobre un producto o servicio.')" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-isaCyan to-sky-400 text-bgMain font-bold text-sm hover:opacity-95 transition-opacity flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Escribir al WhatsApp</span>
+                        </button>
+                        <a href="https://whatsapp.com/channel/0029VbDb4l86GcGFzIH14V0Y" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-bgCard hover:bg-bgCardHover border border-borderSubtle hover:border-isaCyan/50 text-slate-200 font-semibold text-xs transition-colors flex items-center justify-center gap-2">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5 text-isaCyan"></i>
+                            <span>Ver Catálogo en Canal WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <p>&copy; <span id="year"></span> <strong class="text-slate-300">isatech / zero</strong> — Barinas, Venezuela. Todos los derechos reservados.</p>
+                <p class="font-mono">HW • GPU • MOBILE LAB</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =========================================================
+         MODAL DE DETALLES DEL PRODUCTO / SERVICIO
+    ========================================================= -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-bgCard border border-borderSubtle rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl transform transition-all">
+            <div id="modal-content">
+                <!-- Contenido inyectado por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         SIDEBAR CARRITO / COTIZADOR WHATSAPP
+    ========================================================= -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs hidden transition-opacity"></div>
+    
+    <aside id="cart-drawer" class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-bgCard border-l border-borderSubtle shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Header del Carrito -->
+        <div class="p-6 border-b border-borderSubtle flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <i data-lucide="shopping-bag" class="w-5 h-5 text-isaCyan"></i>
+                <h3 class="text-lg font-bold text-white">Lista de Cotización</h3>
+            </div>
+            <button onclick="toggleCart()" class="p-2 rounded-xl bg-bgMain text-slate-400 hover:text-white border border-borderSubtle">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Lista de Ítems -->
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <!-- Renderizado por JS -->
+        </div>
+
+        <!-- Footer del Carrito -->
+        <div class="p-6 border-t border-borderSubtle bg-bgMain/80 space-y-4">
+            <div class="flex items-center justify-between text-sm">
+                <span class="text-slate-400">Modalidad de presupuesto:</span>
+                <span id="cart-total" class="text-sm font-bold font-mono text-isaCyan">Cotización directa</span>
+            </div>
+            <p class="text-[11px] text-slate-500">
+                * Envía tu lista seleccionada y te responderemos al instante por WhatsApp con precios actualizados y disponibilidad en Barinas.
+            </p>
+            <button id="checkout-btn" onclick="sendOrderToWhatsApp()" disabled class="w-full py-3.5 px-5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-bgMain font-extrabold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Enviar Cotización a WhatsApp</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- =========================================================
+         LÓGICA JAVASCRIPT
+    ========================================================= -->
+    <script>
+        const WHATSAPP_PHONE = "584147351500";
+
+        // Base de datos enfocada principalmente en venta de componentes, combos y hardware
+        const products = [
+            {
+                id: 101,
+                name: "PC Gamer / Estudio Ryzen 5 5600G",
+                category: "pcs",
+                categoryLabel: "PCs & Combos",
+                price: null,
+                badge: "Equipo Completo",
+                badgeColor: "cyan",
+                icon: "cpu",
+                image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800&q=80",
+                fallbackText: "PC+Ryzen+5+5600G",
+                shortDesc: "Ryzen 5 5600G • B450M Pro Max • 16GB RGB 3200MHz • 256GB SSD • EVGA 750W 80+ Gold.",
+                specs: [
+                    "Procesador: AMD Ryzen 5 5600G (Gráficos Radeon integrados)",
+                    "Placa Madre: MSI B450M Pro Max",
+                    "Memoria RAM: 16GB (2x8GB) 3200MHz CL16 Dual Channel RGB",
+                    "Almacenamiento: 256GB SSD de alta velocidad",
+                    "Fuente de Poder: EVGA 750W Certificación 80+ Gold",
+                    "Case: Jemip Legend Pro con 3 ventiladores + controladora hub + control remoto",
+                    "Sistema Operativo: Windows 11 Pro instalado y optimizado"
+                ]
+            },
+            {
+                id: 102,
+                name: "Combo AM4 Ryzen 5 5600X + B550M WiFi",
+                category: "pcs",
+                categoryLabel: "PCs & Combos",
+                price: null,
+                badge: "Combo Estrella",
+                badgeColor: "pink",
+                icon: "layers",
+                image: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=800&q=80",
+                fallbackText: "Combo+Ryzen+5+5600X",
+                shortDesc: "Ryzen 5 5600X • B550M con WiFi y Bluetooth • 16GB RAM • M.2 500GB • Fuente 650W.",
+                specs: [
+                    "Procesador: AMD Ryzen 5 5600X (6 Núcleos / 12 Hilos)",
+                    "Placa Madre: Chipset B550M con conectividad WiFi y Bluetooth integrada",
+                    "Memoria RAM: 16GB DDR4 Dual Channel",
+                    "Almacenamiento: Unidad SSD M.2 NVMe de 500GB",
+                    "Fuente de Poder: Fuente certificada de 650W"
+                ]
+            },
+            {
+                id: 1,
+                name: "AMD Radeon RX 580 8GB GDDR5",
+                category: "gpu",
+                categoryLabel: "Tarjetas Gráficas",
+                price: null,
+                badge: "Probada en FurMark",
+                badgeColor: "pink",
+                icon: "fan",
+                image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80",
+                fallbackText: "Radeon+RX+580+8GB",
+                shortDesc: "8GB VRAM • Mantenimiento preventivo recién hecho • Excelente 1080p.",
+                specs: [
+                    "Memoria: 8GB GDDR5 256-bit",
+                    "Mantenimiento: Pasta térmica nueva de alto rendimiento y limpieza profunda",
+                    "Pruebas: Test de estrés FurMark aprobado con temperaturas estables",
+                    "Ideal para eSports y gaming fluido en 1080p"
+                ]
+            },
+            {
+                id: 2,
+                name: "NVIDIA GeForce GTX 1660 Super 6GB",
+                category: "gpu",
+                categoryLabel: "Tarjetas Gráficas",
+                price: null,
+                badge: "Stock Verificado",
+                badgeColor: "cyan",
+                icon: "zap",
+                image: "https://images.unsplash.com/photo-1555617981-dac3880eac6e?auto=format&fit=crop&w=800&q=80",
+                fallbackText: "GTX+1660+Super+6GB",
+                shortDesc: "6GB GDDR6 • Bajo consumo energético • Ideal para streaming y gaming.",
+                specs: [
+                    "Memoria: 6GB GDDR6 192-bit",
+                    "Encoder NVENC dedicado para transmisión y edición",
+                    "Consumo eficiente (125W TDP)",
+                    "Garantía por defecto de fábrica en tienda"
+                ]
+            },
+            {
+                id: 103,
+                name: "Kit Memoria RAM 16GB (2x8GB) DDR4 3200MHz RGB",
+                category: "componentes",
+                categoryLabel: "RAM, SSD & Fuentes",
+                price: null,
+                badge: "Dual Channel",
+                badgeColor: "cyan",
+                icon: "memory-stick",
+                image: "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=800&q=80",
+                fallbackText: "RAM+16GB+RGB+3200MHz",
+                shortDesc: "3200MHz CL16 • Perfil XMP 2.0 • Iluminación RGB compatible con Aura / Mystic Light.",
+                specs: [
+                    "Capacidad: 16GB en configuración Dual Channel (2 módulos de 8GB)",
+                    "Frecuencia y latencia: 3200MHz CL16 de baja latencia",
+                    "Disipador de aluminio con barra de iluminación RGB",
+                    "Compatible con plataformas Intel y AMD Ryzen"
+                ]
+            },
+            {
+                id: 104,
+                name: "Fuente de Poder EVGA 750W 80+ Gold",
+                category: "componentes",
+                categoryLabel: "RAM, SSD & Fuentes",
+                price: null,
+                badge: "Certificada 80+ Gold",
+                badgeColor: "pink",
+                icon: "plug-zap",
+                image: "https://images.unsplash.com/photo-1587202372616-b43abea06c2a?auto=format&fit=crop&w=800&q=80",
+                fallbackText: "EVGA+750W+80+Gold",
+                shortDesc: "Alta eficiencia energética • Protecciones OVP/UVP/OPP • Lista para GPUs exigentes.",
+                specs: [
+                    "Potencia real: 750W continuos",
+                    "Eficiencia: Certificación 80 PLUS Gold",
+                    "Protecciones eléctricas completas contra sobrecarga y cortocircuito",
+                    "Ventilador silencioso de control térmico inteligente"
+                ]
+            },
+            {
+                id: 105,
+                name: "Unidad SSD M.2 NVMe 500GB Alta Velocidad",
+                category: "componentes",
+                categoryLabel: "RAM, SSD & Fuentes",
+                price: null,
+                badge: "PCIe Gen3 x4",
+                badgeColor: "cyan",
+                icon: "hard-drive",
+                image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=800&q=80",
+                fallbackText: "SSD+NVMe+500GB",
+                shortDesc: "Arranque ultra rápido de Windows 11 y tiempos de carga mínimos en juegos.",
+                specs: [
+                    "Formato: M.2 2280 interfaz NVMe PCIe",
+                    "Capacidad: 500GB",
+                    "Ideal como unidad principal de sistema operativo y programas pesados",
+                    "Garantía directa por defecto de fábrica"
+                ]
+            },
+            {
+                id: 4,
+                name: "Servicio Técnico: Mantenimiento GPU / PC",
+                category: "servicios",
+                categoryLabel: "Servicio Técnico",
+                price: null,
+                badge: "Soporte Taller",
+                badgeColor: "pink",
+                icon: "wrench",
+                image: "https://images.unsplash.com/photo-1597852074816-d933c7d2b988?auto=format&fit=crop&w=800&q=80",
+                fallbackText: "Mantenimiento+GPU+PC",
+                shortDesc: "Limpieza profunda, cambio de pasta térmica de alto rendimiento y thermal pads.",
+                specs: [
+                    "Desarme completo y limpieza de disipadores y ventiladores",
+                    "Aplicación de pasta térmica de alta conductividad",
+                    "Revisión y reemplazo de thermal pads en GPUs",
+                    "Pruebas de estrés y monitoreo de temperaturas"
+                ]
+            }
+        ];
+
+        // Estado de la aplicación
+        let currentCategory = 'todos';
+        let cart = [];
+
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            renderProducts();
+            updateCartUI();
+            lucide.createIcons();
+        });
+
+        // Cambiar categoría activa
+        function setCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === category) {
+                    btn.className = 'cat-btn active px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all bg-isaCyan text-bgMain shadow-md shadow-isaCyan/20';
+                } else {
+                    btn.className = 'cat-btn px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all bg-bgCard text-slate-300 hover:text-white border border-borderSubtle';
+                }
+            });
+        // Renderizado de tarjetas del catálogo (con imágenes, sin precios, con botón Cotiza en WhatsApp)
+        function renderProducts(list = products) {
+            const grid = document.getElementById('products-grid');
+            const emptyState = document.getElementById('empty-state');
+
+            if (list.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = list.map(product => {
+                const badgeStyle = product.badgeColor === 'pink' 
+                    ? 'bg-zeroPink/90 text-white border-zeroPink' 
+                    : 'bg-bgMain/90 text-isaCyan border-isaCyan/60';
+
+                return `
+                    <article class="group rounded-3xl bg-bgCard border border-borderSubtle hover:border-isaCyan/50 overflow-hidden flex flex-col justify-between transition-all hover:-translate-y-1 shadow-lg">
+                        <div>
+                            <!-- Imagen del componente -->
+                            <div class="relative h-48 w-full bg-bgMain overflow-hidden border-b border-borderSubtle">
+                                <img 
+                                    src="${product.image}" 
+                                    alt="${product.name}" 
+                                    loading="lazy"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/600x400/161b22/00f0ff?text=${product.fallbackText}';"
+                                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                >
+                                <div class="absolute inset-0 bg-gradient-to-t from-bgCard via-transparent to-black/30 opacity-85"></div>
+                                
+                                <span class="absolute top-3.5 left-3.5 text-[11px] font-mono uppercase tracking-wider px-3 py-1 rounded-full border backdrop-blur-md ${badgeStyle} font-semibold shadow-md">
+                                    ${product.badge}
+                                </span>
+
+                                <span class="absolute bottom-3 right-3.5 text-[11px] font-mono text-slate-200 bg-bgMain/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-borderSubtle">
+                                    ${product.categoryLabel}
+                                </span>
+                            </div>
+
+                            <!-- Información del componente -->
+                            <div class="p-6 pb-2">
+                                <h3 class="text-lg font-bold text-white group-hover:text-isaCyan transition-colors leading-snug">
+                                    ${product.name}
+                                </h3>
+
+                                <p class="text-sm text-slate-400 mt-2.5 leading-relaxed">
+                                    ${product.shortDesc}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-4 mt-4 border-t border-borderSubtle/70">
+                            <div class="flex items-center justify-between">
+                                <button onclick="openDirectWhatsApp('Hola isatech / zero, quiero cotizar: ${product.name}')" class="inline-flex items-center gap-1.5 text-sm font-bold text-isaCyan hover:text-sky-300 transition-colors">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                    <span>Cotiza en WhatsApp</span>
+                                </button>
+
+                                <div class="flex items-center gap-2">
+                                    <button onclick="openProductModal(${product.id})" class="p-2.5 rounded-xl bg-bgMain hover:bg-bgCardHover border border-borderSubtle text-slate-300 hover:text-white transition-colors" title="Ver especificaciones">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </button>
+                                    <button onclick="addToCart(${product.id})" class="px-3.5 py-2.5 rounded-xl bg-zeroPink hover:bg-zeroCoral text-white text-xs font-bold transition-colors flex items-center gap-1.5 shadow-md shadow-zeroPink/20" title="Agregar a lista de cotización">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                        <span>Lista</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // Modal de detalles del producto
+        function openProductModal(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('modal-content');
+
+            content.innerHTML = `
+                <div>
+                    <div class="relative h-52 w-full bg-bgMain overflow-hidden border-b border-borderSubtle">
+                        <img 
+                            src="${product.image}" 
+                            alt="${product.name}"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/161b22/00f0ff?text=${product.fallbackText}';"
+                            class="w-full h-full object-cover object-center"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-bgCard via-bgCard/30 to-transparent"></div>
+                        <button onclick="closeProductModal()" class="absolute top-4 right-4 p-2 rounded-xl bg-bgMain/85 backdrop-blur-md text-slate-300 hover:text-white border border-borderSubtle">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-6 sm:p-8 pt-4">
+                        <div class="pb-4 border-b border-borderSubtle">
+                            <span class="text-xs font-mono text-isaCyan uppercase tracking-wider">${product.categoryLabel}</span>
+                            <h3 class="text-xl sm:text-2xl font-black text-white mt-1">${product.name}</h3>
+                        </div>
+
+                        <div class="py-5 space-y-4">
+                            <p class="text-sm text-slate-300 leading-relaxed">${product.shortDesc}</p>
+                            
+                            <div class="rounded-2xl bg-bgMain border border-borderSubtle p-4">
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-3">Especificaciones y detalles:</h4>
+                                <ul class="space-y-2.5 text-sm text-slate-200">
+                                    ${product.specs.map(spec => `
+                                        <li class="flex items-start gap-2.5">
+                                            <i data-lucide="check-circle-2" class="w-4 h-4 text-isaCyan shrink-0 mt-0.5"></i>
+                                            <span>${spec}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="pt-5 border-t border-borderSubtle flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <button onclick="openDirectWhatsApp('Hola isatech / zero, quiero cotizar: ${product.name}'); closeProductModal();" class="w-full sm:w-auto flex-1 py-3.5 px-5 rounded-2xl bg-isaCyan hover:bg-sky-300 text-bgMain font-bold text-sm transition-colors flex items-center justify-center gap-2">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <span>Cotiza en WhatsApp</span>
+                            </button>
+                            <button onclick="addToCart(${product.id}); closeProductModal();" class="w-full sm:w-auto py-3.5 px-5 rounded-2xl bg-zeroPink hover:bg-zeroCoral text-white font-bold text-sm transition-colors flex items-center justify-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                <span>Agregar a lista</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('product-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('product-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'product-modal') closeProductModal();
+        });
+
+        // Funciones del Carrito / Lista de Cotización
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-overlay');
+            const isClosed = drawer.classList.contains('translate-x-full');
+
+            if (isClosed) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            updateCartUI();
+            showToast(`"${product.name}" agregado a tu lista`);
+        }
+
+        function updateQty(id, delta) {
+            const index = cart.findIndex(item => item.id === id);
+            if (index === -1) return;
+
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const container = document.getElementById('cart-items');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            badge.textContent = totalItems;
+
+            if (cart.length === 0) {
+                checkoutBtn.disabled = true;
+                container.innerHTML = `
+                    <div class="text-center py-12 px-4">
+                        <div class="w-14 h-14 rounded-2xl bg-bgMain border border-borderSubtle flex items-center justify-center text-slate-500 mx-auto mb-3">
+                            <i data-lucide="shopping-bag" class="w-7 h-7"></i>
+                        </div>
+                        <p class="text-sm font-semibold text-white">Tu lista de cotización está vacía</p>
+                        <p class="text-xs text-slate-400 mt-1">Agrega equipos, combos o servicios del catálogo para cotizarlos todos juntos en WhatsApp.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+            container.innerHTML = cart.map(item => `
+                <div class="p-4 rounded-2xl bg-bgMain border border-borderSubtle flex items-center justify-between gap-3">
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-bold text-white truncate">${item.name}</p>
+                        <p class="text-xs font-mono text-isaCyan mt-0.5">Cotiza en WhatsApp</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-bgCard border border-borderSubtle rounded-xl p-1">
+                        <button onclick="updateQty(${item.id}, -1)" class="w-7 h-7 rounded-lg hover:bg-bgMain text-slate-300 flex items-center justify-center font-bold">-</button>
+                        <span class="text-xs font-mono font-bold text-white w-5 text-center">${item.qty}</span>
+                        <button onclick="updateQty(${item.id}, 1)" class="w-7 h-7 rounded-lg hover:bg-bgMain text-slate-300 flex items-center justify-center font-bold">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // Enviar cotización completa por WhatsApp
+        function sendOrderToWhatsApp() {
+            if (cart.length === 0) return;
+
+            let message = "Hola *isatech / zero*, me gustaría cotizar los siguientes componentes/equipos de su catálogo:\n\n";
+            cart.forEach((item, idx) => {
+                message += `${idx + 1}. *${item.name}* (x${item.qty})\n`;
+            });
+            message += "\nQuedo atento a disponibilidad y precios. ¡Gracias!";
+
+            openDirectWhatsApp(message);
+        }
+
+        // Abrir WhatsApp directo con mensaje prellenado (compatible con vista previa iframe y móviles)
+        function openDirectWhatsApp(text) {
+            const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
+            
+            // Crear enlace temporal para evitar bloqueo de popups en navegadores e iframes
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Mostrar aviso con opción de copia por si la vista previa restringe enlaces externos
+            showToast('Abriendo WhatsApp (+58 414-7351500)...');
+        }
+
+        // Menú móvil
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Notificación Toast
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 2600);
+        }
+    </script>
+</body>
+</html>
